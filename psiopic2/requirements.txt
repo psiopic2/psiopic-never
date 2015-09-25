@@ -1,0 +1,6 @@
+requests
+docopt>=0.6.0
+appdirs
+blessings
+PyMySQL
+pexpect

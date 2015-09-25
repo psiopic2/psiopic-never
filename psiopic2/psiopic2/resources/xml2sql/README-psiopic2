@@ -1,0 +1,11 @@
+This contains a copy of the source code specifically available here:
+
+https://github.com/matthewfl/mediawiki-xml2sql/commit/ac082ec9353885c8391217033199384790340efa
+
+It includes the fix mentioned here:
+https://meta.wikimedia.org/wiki/Data_dumps/xml2sql
+
+It also includes other fixes for missing columns.
+
+Though it still does not handle <DiscussionThreading> tag, so we'll clean that up in the python script first
+

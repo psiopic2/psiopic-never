@@ -1,0 +1,81 @@
+User:
+
+user_id 1
+user_name = Admin
+user_password = :pbkdf2:sha256:10000:128:z6MSD/LNN3prz1ig8W40tg==:Kbgio2Xqqebibf56+D3rS+pSoZt6+VEPWryAatH5xzjAe6/kJ8SoppzgyRPjkuil6TtLW+a0agFhUTk+k1rDIzchGDkeErv1zNVV8KKRH9B7x1Itv2PUAYDSYgg2XzJINSJ3PEPZJ3tVnz/fT5YiakRv5VJJ8SVHgQVy5AvlDiI=
+user_email = admin@admin.com
+user_token = e668f0608e606d0a023150c8ca44bda5
+user_registration = 20150829030838
+
+user_groups
+
+ug_user = 1
+ug_group = bureaucrat
+ug_group = sysop
+
+text
+
+old_id = 1
+old_text = blah[blah]
+old_flags = utf-8
+
+site_stats
+ss_row_id = 1
+ss_total_edits = 1
+ss_good_articles = 0
+ss_total_pages = 1
+ss_users = 1
+ss_active_users = -1
+ss_images = 0
+
+revision
+rev_id = 1
+rev_page = 1
+rev_text_id = 1
+rev_user = 0
+rev_user_text = Psiopic2
+rev_timestamp = 320593295
+rev_minor_edit = 0
+rev_deleted = 0
+rev_len (len of text)
+rev_parent_id = 0
+rev_sha1 = i dunno
+
+recentchanges
+rc_id = 1
+rc_timestamp = 3502058235
+rc_user = 0
+rc_user_text = Psiopic2
+rc_namespace = 0
+rc_title = ff_bar
+rc_comment = null
+rc_minor = 0
+rc_bot = 0
+rc_cur_id = 1
+rc_this_oldid = 1
+rc_last_oldid = 0
+rc_type = 1
+rc_source = mw.new
+rc_patrolled = 0
+rc_ip = 127.0.0.1
+rc_old_len = 0
+rc_new_len = 592
+rc_deleted = 0
+rc_logid = 0
+rc_log_type = null
+rc_log_action = null
+rc_params = null
+
+page
+
+page_id = 1
+page_namespace = 0
+page_title = Foo_bar
+page_is_redirect = 0
+page_is_new = 1
+page_random = 0.243502835
+page_touched = 20150829030838 (unix timestamp)
+page_links_updated = 2305820385 (unit timestamp)
+page_latest = 1
+page_len = length of content
+page_content_model = wikitext
