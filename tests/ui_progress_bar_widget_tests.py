@@ -6,7 +6,7 @@ from psiopic2.app.ui.widgets import ProgressBar
 class ProgressBarWidgetTests(unittest.TestCase):
 
   def test_single_bar_no_label(self):
-    pb = ProgressBar(width=10)
+    pb = ProgressBar(width=12)
     pb.output = MagicMock()
 
     pb.render(1, 10)
@@ -16,9 +16,9 @@ class ProgressBarWidgetTests(unittest.TestCase):
     # "[-         ]"
 
     # first render
-    finalString = pb.bracket_color + pb.bracket_start_char
+    finalString = pb.bracket_color + pb.brackets[0]
     finalString += pb.empty_char_color + (pb.empty_char * 10)
-    finalString += pb.bracket_color + pb.bracket_end_char
+    finalString += pb.bracket_color + pb.brackets[1]
 
     # render the bar, without rendering the brackets
     finalString += pb.term.move_x(1)
@@ -28,7 +28,7 @@ class ProgressBarWidgetTests(unittest.TestCase):
     self.assertEquals(outputString, finalString)
 
   def test_single_bar_label(self):
-    pb = ProgressBar(width=10, label="Foobar")
+    pb = ProgressBar(width=12, label="Foobar")
     pb.output = MagicMock()
 
     pb.render(1, 10)
@@ -37,9 +37,9 @@ class ProgressBarWidgetTests(unittest.TestCase):
 
     # first render
     finalString = pb.label + " "
-    finalString += pb.bracket_color + pb.bracket_start_char
+    finalString += pb.bracket_color + pb.brackets[0]
     finalString += pb.empty_char_color + (pb.empty_char * 10)
-    finalString += pb.bracket_color + pb.bracket_end_char
+    finalString += pb.bracket_color + pb.brackets[1]
 
     # render the bar
     finalString += pb.term.move_x(8)
@@ -49,7 +49,7 @@ class ProgressBarWidgetTests(unittest.TestCase):
     self.assertEquals(outputString, finalString)
 
   def test_single_bar_label_with_info(self):
-    pb = ProgressBar(width=10, label="Foobar")
+    pb = ProgressBar(width=12, label="Foobar")
     pb.output = MagicMock()
 
     pb.render(1, 10, info="test")
@@ -60,9 +60,9 @@ class ProgressBarWidgetTests(unittest.TestCase):
 
     # first render
     finalString = pb.label + " "
-    finalString += pb.bracket_color + pb.bracket_start_char
+    finalString += pb.bracket_color + pb.brackets[0]
     finalString += pb.empty_char_color + (pb.empty_char * 10)
-    finalString += pb.bracket_color + pb.bracket_end_char
+    finalString += pb.bracket_color + pb.brackets[1]
 
     # render the bar
     finalString += pb.term.move_x(8)
@@ -72,5 +72,35 @@ class ProgressBarWidgetTests(unittest.TestCase):
     # render the info
     finalString += pb.term.move_x(20)
     finalString += "test"
+
+    self.assertEquals(outputString, finalString)
+
+  def test_dual_bar_no_label(self):
+    pb = ProgressBar(width=23, bars=2)
+    pb.output = MagicMock()
+
+    pb.render(1, 10, no=1)
+    pb.render(2, 10, no=2)
+
+    # [-         |--        ]
+
+    # first render
+    finalString = pb.bracket_color + pb.brackets[0]
+    finalString += pb.empty_char_color + (pb.empty_char * 10)
+    finalString += pb.separator_color + pb.separator_char
+    finalString += pb.empty_char_color + (pb.empty_char * 10)
+    finalString += pb.bracket_color + pb.brackets[1]
+
+    # render the bar, without rendering the brackets
+    finalString += pb.term.move_x(1)
+    finalString += pb.fill_char_color + pb.fill_char
+    finalString += pb.empty_char_color + (pb.empty_char * 9)
+    
+    # render second bar
+    finalString += pb.term.move_x(12)
+    finalString += pb.fill_char_color + pb.fill_char + pb.fill_char
+    finalString += pb.empty_char_color + (pb.empty_char * 8)
+
+    outputString = getOutputString(pb.output.call_args_list)
 
     self.assertEquals(outputString, finalString)

@@ -66,12 +66,9 @@ class Spinner(BaseWidget):
 class ProgressBar(BaseWidget):
   def __init__(self, **kwargs):
     self.term = getTerminal()
-    self._kwargs = kwargs
-    self.indent = kwargs.get('indent', 0)
     self.label = kwargs.get('label', None)
+    self.brackets = kwargs.get('brackets', ('[',']'))
     self.bracket_color = kwargs.get('bracket_color', self.term.white)
-    self.bracket_start_char = kwargs.get('bracket_start_char', '[')
-    self.bracket_end_char = kwargs.get('bracket_end_char', ']')
     self.separator_char = kwargs.get('separator_char','|')
     self.separator_color = kwargs.get('separator_color', self.term.white + self.term.bold)
     self.width = kwargs.get('width', 30)
@@ -81,57 +78,88 @@ class ProgressBar(BaseWidget):
     self.fill_char = kwargs.get('fill_char', '-')
     self.info_color = kwargs.get('info_color', self.term.white)
     self.bars = kwargs.get('bars', 1)
-    self._last_info = ""
+    self.rendered = False   
 
-    self.rendered = False
+    self._last_info = ""
+    self._brackets_length = sum([len(bracket) for bracket in self.brackets])
+    self._separator_length = len(self.separator_char)
+
+    # for even 10 char width:
+    # 1 bar - total width = 12
+    # 2 bar - total width = 23
+
+    self._bar_width = self.width - self._brackets_length # 21 
+
+    if self.bars > 1:
+      self._bar_width -= (self.bars-1 * self._separator_length) # 20
+      self._bar_width = self._bar_width / self.bars # 10
 
     self._bars = []
         
-    self._starting_pos = len(self.bracket_start_char)
-    self._info_pos     = len(self.bracket_start_char) + self.width + len(self.bracket_end_char) + 1
+    self._info_pos     = self.width + 1
 
     if self.label != None:
-      self._starting_pos += len(self.label) + 1
       self._info_pos += len(self.label) + 1
 
-  def _generateBar(self, percent, width):
-    fillchars = self.fill_char * int(math.ceil(self.width * percent))
-    emptychars = self.empty_char * (self.width - len(fillchars))
+  def _generateBar(self, width, percent):
+
+    fillchars = self.fill_char * int(math.ceil(width * percent))
+    emptychars = self.empty_char * (width - len(fillchars))
 
     return self.fill_char_color + fillchars + self.empty_char_color + emptychars
 
   def _renderBar(self, starting_pos, width, percent=0):
+
+    #    print "RENDER BAR: START %s    WIDTH: %s    PERCENT %s" % (starting_pos, width, percent)
+
     self.output(self.term.move_x(starting_pos))
-    self.output(self._generateBar(percent, width))
+    self.output(self._generateBar(width, percent))
       
   def render(self, amt, expected, info=None, no=1):
     if (self.rendered == False):
+      labelLength = 0
       if self.label:
         self.output(self.label + " ")
+        labelLength = len(self.label)
 
-      tpl = self.bracket_color + self.bracket_start_char
-      bartpl = []
-      width = (self.width / self.bars) - (len(self.separator_char) * (self.bars-1))
+      tpl = self.bracket_color + self.brackets[0]
+      
+      if self.bars < 2:
+        tpl += self.empty_char_color
+        tpl += self.empty_char * self._bar_width
+        starting_pos = len(self.brackets[0]) + labelLength
+        self._bars.append((starting_pos, self._bar_width))
+      else:
+        barPlaceHolders = []
+        for i in range(0, self.bars):
+          i += 1
+          barPlaceHolder = self.empty_char_color
+          barPlaceHolder += self.empty_char * self._bar_width
+          barPlaceHolders.append(barPlaceHolder)
 
-      for i in range(0, self.bars):
-        starting_pos = self._starting_pos + (i * (width + len(self.separator_char)))
-       
-        self._bars.append((starting_pos, width)) 
-        bartpl.append(self.empty_char_color + (self.empty_char * width))
+          self._bars.append((len(self.brackets[0]) + (self._separator_length * i-1) + (self._bar_width * (i-1)), self._bar_width))
 
-      separator_tpl = self.separator_color + self.separator_char
-      tpl += separator_tpl.join(bartpl)
-      tpl += self.bracket_color + self.bracket_end_char
+        tpl += (self.separator_color + self.separator_char).join(barPlaceHolders)
+      tpl += self.bracket_color + self.brackets[1]
+ 
       self.output(tpl)
       self.rendered = True
 
-    bar_pos, bar_width = self._bars[no-1]
+    percent = 0.0
+    try:
+      percent = (float(amt) / float(expected))
+    except ZeroDivisionError:
+      pass
 
-    self._renderBar(bar_pos, bar_width, (float(amt) / float(expected)))
+    bar_pos, bar_width = self._bars[no-1]
+    self._renderBar(bar_pos, bar_width, percent)
     
     if info != None and info != self._last_info:
       infoLen = len(info)
-      lastInfoLen = len(self._last_info)
+      if self._last_info:
+        lastInfoLen = len(self._last_info)
+      else:
+        lastInfoLen = 0
 
       if infoLen < lastInfoLen:
         self.output(self.term.move_x(self._info_pos) + (lastInfoLen - infoLen))
