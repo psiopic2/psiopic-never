@@ -13,5 +13,5 @@ def getTerminal():
 
 def out(msg, flush=False):
   sys.stdout.write(msg)
-  if Flush:
+  if flush:
     sys.stdout.flush()
