@@ -130,7 +130,6 @@ class ProgressBar(BaseWidget):
     self._renderBar(bar_pos, bar_width, (float(amt) / float(expected)))
     
     if info != None and info != self._last_info:
-      print "info pos: %s" % self._info_pos
       infoLen = len(info)
       lastInfoLen = len(self._last_info)
 
