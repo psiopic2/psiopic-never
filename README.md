@@ -1,4 +1,4 @@
-[![build status](http://hq.psikon.net:20020/jenkins/job/psiopci2-snapshot/badge/icon)](http://hq.psikon.net:20020/jenkins/job/icu-converter)
+[![build status](http://hq.psikon.net:20020/jenkins/job/psiopic2-snapshot/badge/icon)](http://hq.psikon.net:20020/jenkins/job/psiopic2-snapshot)
 
 # Psiopic2
 Psiopic2 is a hobbyist-level text categorizer that uses Wikimedia content as corpora.
