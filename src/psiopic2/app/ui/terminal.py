@@ -1,4 +1,5 @@
 import blessings
+import sys
 
 __term__ = None
 
@@ -9,3 +10,8 @@ def getTerminal():
   if __term__ == None:
     __term__ = blessings.Terminal()
   return __term__
+
+def out(msg, flush=False):
+  sys.stdout.write(msg)
+  if Flush:
+    sys.stdout.flush()

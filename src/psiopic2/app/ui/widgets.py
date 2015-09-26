@@ -2,6 +2,7 @@ import sys
 import math
 import time
 from .terminal import getTerminal
+from .terminal import out
 
 SPIN_FISH = (">))'>    "," >))'>   ","  >))'>  ","   >))'> ","    >))'>","   <'((< ","  <'((<  "," <'((<   ")
 SPIN_1    = ("  []  ", " [--] ", "[----]", "------", "----- ", "----  ", "---    ", "--    ", "-     ", "     ") 
@@ -12,10 +13,7 @@ class BaseWidget(object):
     self.term = getTerminal()
 
   def output(self, msg, flush=True):
-    sys.stdout.write(msg)
-    if flush:
-      sys.stdout.flush()
-
+    out(msg, flush)
 
 class Spinner(BaseWidget):
   def __init__(self, chars=('/','|','\\','-'), interval=100, label=None, label_color=None, spinner_color=None, suffix_color=None):
