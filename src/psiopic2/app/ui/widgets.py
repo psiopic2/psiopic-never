@@ -1,5 +1,4 @@
 import sys
-import blessings
 import math
 import time
 from .terminal import getTerminal
@@ -7,40 +6,59 @@ from .terminal import getTerminal
 SPIN_FISH = (">))'>    "," >))'>   ","  >))'>  ","   >))'> ","    >))'>","   <'((< ","  <'((<  "," <'((<   ")
 SPIN_1    = ("  []  ", " [--] ", "[----]", "------", "----- ", "----  ", "---    ", "--    ", "-     ", "     ") 
 
-
-
-class Spinner():
-  def __init__(self, chars=('/','|','\\','-'), interval=500, label=None):
-    self.chars = chars
-    self.interval = 100
-    self.term = getTerminal()
+class BaseWidget(object):
+  def __init__(self, label=None):
     self.label = label
-    self.label_color = self.term.white + self.term.bold
-    self.spinner_color = self.term.green
+    self.term = getTerminal()
+
+  def output(self, msg, flush=True):
+    sys.stdout.write(msg)
+    if flush:
+      sys.stdout.flush()
+
+
+class Spinner(BaseWidget):
+  def __init__(self, chars=('/','|','\\','-'), interval=100, label=None, label_color=None, spinner_color=None, suffix_color=None):
+    super(Spinner, self).__init__(label)
+    self.chars = chars
+    self.interval = interval
+
+    if label_color == None:
+      self.label_color = self.term.normal
+    else:
+      self.label_color = label_color
+
+    if spinner_color == None:
+      self.spinner_color = self.term.normal
+    else:
+      self.spinner_color = spinner_color
+
+    if suffix_color == None:
+      self.suffix_color = self.term.normal
+    else:
+      self.suffix_color = suffix_color
+
     self._counter = 0
     self._last_time = 0
     self.rendered = False
 
     self._starting_pos = 0
     if self.label:
-      self._starting_pos += len(self.label) + 2
+      self._starting_pos += len(self.label) + 1
 
   def render(self, suffix=None):
     curtime = time.time() * 1000
     if self.rendered == False:
       if self.label:
-        sys.stdout.write(self.label_color + self.label + self.spinner_color)
-      sys.stdout.write(" ")
-      sys.stdout.flush()
+        self.output(self.label_color + self.label + " ", False)
       self.rendered = True
     
     if ((curtime - self._last_time) >= self.interval) or self.interval == None:
-      sys.stdout.write(self.term.move_x(self._starting_pos) + self.chars[self._counter])
+      self.output(self.term.move_x(self._starting_pos) + self.spinner_color + self.chars[self._counter])
 
       if suffix:
-        sys.stdout.write(" %s" % suffix)
+        self.output(" %s%s" % (self.suffix_color, suffix))
 
-      sys.stdout.flush()
       self._counter += 1
       self._last_time = curtime
       if self._counter == len(self.chars):
