@@ -81,7 +81,7 @@ class ProgressTask(BaseTask):
   def progress(self, dl, total, info=None, no=1):
     if self.widgets:
       if self.bar == None:
-        self.bar = widgets.ProgressBarWidget()
+        self.bar = widgets.ProgressBar()
       self.bar.render(dl, total, info, no)
       sys.stdout.flush()
     else:
@@ -597,7 +597,7 @@ class Extractor(ProgressTask):
   def __init__(self, conf):
     super(Extractor, self).__init__(conf)
 
-    self.bar = widgets.ProgressBarWidget(bars=2)
+    self.bar = widgets.ProgressBar(bars=2)
 
     
 

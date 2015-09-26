@@ -64,43 +64,6 @@ class Spinner(BaseWidget):
   
 
 class ProgressBar(BaseWidget):
-  def __init__(self, **kwargs): 
-    self.term = getTerminal()
-    self.width = kwargs.get('width', 30)
-    self.empty_char = kwargs.get('empty_char', ' ')
-    self.fill_char  = kwargs.get('fill_char', '-')
-    self.empty_char_color = kwargs.get('empty_char_color', self.term.white + self.term.bold)
-    self.fill_char_color  = kwargs.get('fill_char_color', self.term.green)
-    self.starting_pos     = kwargs.get('starting_pos', 0)
-    self.last_percent = None
-    self.last_info = None
-    self.last_expected = None
-    self._interval_percent = (1 / float(self.width))
-
-  def render(self, amt, expected):
-    if expected != self.last_expected:
-      self.last_percent = 0
-      self.last_expected = expected
-
-    try:
-      percent = float(amt) / float(expected)
-    except ZeroDivisionError:
-      percent = 0
-   
-    if (percent - self.last_percent) >= self._interval_percent:
-      self.output(self.term.move_x(self.starting_pos))
-    
-      self.last_percent = percent
-      fillchars = self.fill_char * int(math.ceil(self.width * percent))
-      emptychars = self.empty_char * (self.width - len(fillchars))
-      
-      self.output(self.fill_char_color + fillchars)
-      self.output(self.empty_char_color + emptychars)
-
-     
-   
-
-class ProgressBarWidget(BaseWidget):
   def __init__(self, **kwargs):
     self.term = getTerminal()
     self._kwargs = kwargs
@@ -165,7 +128,6 @@ class ProgressBarWidget(BaseWidget):
     bar_pos, bar_width = self._bars[no-1]
 
     self._renderBar(bar_pos, bar_width, (float(amt) / float(expected)))
-#    self._bars[no-1].render(amt, expected)
     
     if info != None and info != self._last_info:
       print "info pos: %s" % self._info_pos
