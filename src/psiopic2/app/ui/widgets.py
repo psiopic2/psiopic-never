@@ -92,7 +92,7 @@ class ProgressBar(BaseWidget):
 
     if self.bars > 1:
       self._bar_width -= (self.bars-1 * self._separator_length) # 20
-      self._bar_width = self._bar_width / self.bars # 10
+      self._bar_width = int(self._bar_width / self.bars) # 10
 
     self._bars = []
         
