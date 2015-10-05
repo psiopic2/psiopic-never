@@ -14,8 +14,6 @@ class SpinnerTests(unittest.TestCase):
       if interval >= len(spinner.chars):
         interval = interval - len(spinner.chars)
 
-      print interval
-
       finalString = spinner.term.move_x(0) + spinner.spinner_color + spinner.chars[interval]
       spinner.render()
 

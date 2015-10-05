@@ -21,6 +21,9 @@ class Spinner(BaseWidget):
     self.chars = chars
     self.interval = interval
 
+    if self.interval == None:
+      self.interval = 0
+
     if label_color == None:
       self.label_color = self.term.normal
     else:
@@ -50,7 +53,11 @@ class Spinner(BaseWidget):
       if self.label:
         self.output(self.label_color + self.label + " ", False)
       self.rendered = True
-    
+   
+    print(curtime)
+    print(self._last_time)
+    print(self.interval)
+ 
     if ((curtime - self._last_time) >= self.interval) or self.interval == None:
       self.output(self.term.move_x(self._starting_pos) + self.spinner_color + self.chars[self._counter])
 

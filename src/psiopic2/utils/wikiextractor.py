@@ -32,8 +32,6 @@ class WikiExtractorServer(object):
       '--daemon'
     ]
     
-    print cmd
-    
     self.proc = subprocess.Popen(cmd)
     self.proc.wait()
     
