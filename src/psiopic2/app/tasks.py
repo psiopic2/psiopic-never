@@ -225,7 +225,7 @@ class WikiExtractor(DatabaseTask):
               jobpids.remove(pid)
               self.log.warning('Total jobs: %s' % len(jobpids))
               
-        except OSError, e:
+        except OSError as e:
           if e.errno != 10:
             raise e
             
@@ -388,7 +388,7 @@ class Xml2Sql(BaseTask):
           sys.stdout.flush()
           line = ""
         else:
-          line += byte
+          line += byte.decode("utf-8")
       else:
         break
         
@@ -422,7 +422,7 @@ class CompileXml2Sql(BaseTask):
     for d in ['.deps','getopt/.depts']:
       try:
         os.rmdir(d)
-      except OSError, e:
+      except OSError as e:
         if e.errno != 2:
           self.log.warning('Unable to delete %s/%s: %s' % (self.src, d, e.strerror))
 
@@ -430,7 +430,7 @@ class CompileXml2Sql(BaseTask):
     for f in ['config.h', 'config.log', 'config.status', 'getopt/Makefile', 'Makefile', 'stamp-h1']:
       try:
         os.remove(f)
-      except OSError, e:
+      except OSError as e:
         if e.errno != 2:
           self.log.warning('Unable to delete %s/%s: %s' % (self.src, f, e.strerror))
           
@@ -487,7 +487,7 @@ class SqlImporter(DatabaseTask, ProgressTask):
         if line.strip().endswith(';'):
           # xml2sql inserts this line
           # /*!40000 ALTER TABLE `page` DISABLE KEYS */
-          # sql = sql.decode("utf-8").replace("/*!40000 ALTER TABLE `%s` DISABLE KEYS */" % sqlFile, "").strip()
+          sql = sql.replace("/*!40000 ALTER TABLE `%s` DISABLE KEYS */" % sqlFile, "").strip()
           
           if sql != ";":
             warnings.filterwarnings('ignore')
@@ -499,6 +499,8 @@ class SqlImporter(DatabaseTask, ProgressTask):
           totalSqlFileRead += len(line)
           
           self.progress(totalSqlFileRead, sqlFileSize, 'Importing ' + sqlFile)
+
+      f.close()
     
     sys.stdout.write("\n")
     
