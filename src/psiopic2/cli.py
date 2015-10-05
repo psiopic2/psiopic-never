@@ -51,6 +51,12 @@ class App():
     try:
       if app == None:
         app = self._argv[1]
+
+      try:
+        appObj = self.appMap[app]
+      except KeyError:
+        raise HelpException
+
       return self.appMap[app]
     except IndexError:
       raise HelpException
@@ -63,7 +69,7 @@ class App():
       app(self._argv)
     except HelpException:
       self.help()
-    except Exception, e:
+    except Exception as e:
       self.log.critical('Unhandled exception')
       self.log.critical(traceback.format_exc())
       ret = 1
