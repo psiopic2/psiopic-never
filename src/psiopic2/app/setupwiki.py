@@ -1,6 +1,12 @@
 from docopt import docopt
 from appdirs import AppDirs
-from urlparse import urlparse
+
+
+try:
+  from urlparse import urlparse
+except ImportError:
+  from urllib import parse as urlparse
+
 import sys
 import os
 import shutil
@@ -22,7 +28,6 @@ from psiopic2.app.tasks import DumpExtractor
 from psiopic2.app.ui.logutils import getLogger
 import psiopic2.app.ui.widgets as widgets
 import psiopic2.app.ui.prompt as prompt
-from urlparse import urlparse
 from datetime import datetime
 from imp import PKG_DIRECTORY
 from psiopic2.utils.files import getArchiveBasename
